@@ -21,6 +21,8 @@
     - Deploy kafka cluster
         - Deploy with default setting with one node `helm install kafka-cluster bitnami/kafka`
         - Deploy with two nodes `helm install bitnami --set replicaCount=2 bitnami/kafka`
+        - check `helm list`
+        - delete `helm uninstall kafka-cluster`
     - check install status `kubectl get pods`
 5. uninstall kafka
     - delete `helm delete kafka-cluster`
@@ -59,3 +61,42 @@ kafka-console-consumer.sh \
 6. To stop the service, use ^C. To exit kafka client, cmd `exit`
 
 
+# Create Kafka service with external code
+
+1. uninstall above service `helm uninstall kafka-cluster`
+2. install service with config
+
+```
+helm install kafka-cluster \
+  --set replicaCount=1 \
+  --set externalAccess.enabled=true \
+  --set externalAccess.service.type=LoadBalancer \
+  --set externalAccess.autoDiscovery.enabled=true \
+  --set serviceAccount.create=true \
+  --set rbac.create=true \
+  bitnami/kafka
+```
+
+3. execute `minikube tunnel`
+4. Create Producer and Consumer python file
+    - (optional) open another shell and create conda environment
+
+    ```
+    conda create --name kafka-dev python=3.9
+    conda activate kafka-dev
+    ```
+
+    - install kafka python package `pip install kafka-python`
+    - open another shell and execute kafka_consumer.py
+
+    ```
+    conda activate kafka-dev
+    python3 Kafka_training/kafka_consumer.py
+    ```
+
+    - open another shell and execute kafka_producer.py
+    
+    ```
+    conda activate kafka-dev
+    python3 Kafka_training/kafka_producer.py
+    ```
