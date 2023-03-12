@@ -95,8 +95,15 @@ helm install kafka-cluster \
     ```
 
     - open another shell and execute kafka_producer.py
-    
+
     ```
     conda activate kafka-dev
     python3 Kafka_training/kafka_producer.py
     ```
+
+5. Finish exercise
+    - stop the tunnel
+    - uninstall this service `helm uninstall kafka-cluster`
+    - stop minikube `minikube stop`
+    - delete minikube `minikube delete`
+
